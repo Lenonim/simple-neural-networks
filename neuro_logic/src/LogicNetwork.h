@@ -75,12 +75,28 @@ public:
 class SignalLogicPerceptron : public AbstractLogicPerceptron {
 	double bottom_threshold = 0.5;
 	double top_threshold = this->bottom_threshold + 0.5;
+	
+	bool is_backward_activation;
 
-	virtual bool predict(bool a, bool b) override {
+	bool forward_activate_functin(bool a, bool b) {
 		if (this->count_S(a, b) >= bottom_threshold && this->count_S(a, b) <= top_threshold)
 			return true;
 		else
 			return false;
+	}
+
+	bool backward_activate_functin(bool a, bool b) {
+		if (this->count_S(a, b) < bottom_threshold || this->count_S(a, b) > top_threshold)
+			return true;
+		else
+			return false;
+	}
+
+	virtual bool predict(bool a, bool b) override {
+		if (this->is_backward_activation)
+			return backward_activate_functin(a, b);
+		else
+			return forward_activate_functin(a, b);
 	};
 
 public:
@@ -100,7 +116,6 @@ public:
 
 					this->Weigths[0] = this->Weigths[0] + (float)train_data[i][0] * delta;
 					this->Weigths[1] = this->Weigths[1] + (float)train_data[i][1] * delta;
-
 					this->bottom_threshold = this->bottom_threshold - delta;
 					this->top_threshold = this->top_threshold - delta;
 				}
@@ -108,8 +123,11 @@ public:
 		} while (error_flag);
 	}
 
-	SignalLogicPerceptron() : AbstractLogicPerceptron() {}
-	SignalLogicPerceptron(const bool train_data[][2], const bool etalons[]) {
+	SignalLogicPerceptron(bool backward_activation = false) : AbstractLogicPerceptron() {
+		is_backward_activation = backward_activation;
+	}
+	SignalLogicPerceptron(const bool train_data[][2], const bool etalons[], bool backward_activation = false) {
+		is_backward_activation = backward_activation;
 		this->fit(train_data, etalons);
 	}
 };
@@ -131,7 +149,7 @@ static ThresholdLogicPerceptron IMP(points_data, IMP_etalons);
 static ThresholdLogicPerceptron SHEFFER(points_data, SHEFFER_etalons);
 static ThresholdLogicPerceptron YES(points_data, YES_etalons);
 
-static SignalLogicPerceptron XOR(points_data, XOR_etalons);
-//static SignalLogicPerceptron EQ(points_data, EQ_etalons);
+static SignalLogicPerceptron XOR(points_data, XOR_etalons, false);
+static SignalLogicPerceptron EQ(points_data, EQ_etalons, true);
 
 #endif
