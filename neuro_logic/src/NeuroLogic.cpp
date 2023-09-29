@@ -1,9 +1,15 @@
-﻿#include <iostream>
+﻿#define BOOL_DATA_FOR_NETWORK
+#define BOOL_NEURO_LOGIC_OPERATORS
+//#define INT_DATA_FOR_NETWORK
+//#define INT_NEURO_LOGIC_OPERATORS
+
+#include <iostream>
 #include "LogicNetwork.h"
 
 int main()
 {	
 	setlocale(LC_ALL, "RUSSIAN");
+	system("color f0");
 
 	std::cout << "Таблицы истинности\n";
 
@@ -43,8 +49,8 @@ int main()
 
 	std::cout << "\nСложные выражения\n";
 
-	std::cout << "\nSHEFFER( NRIMP(true, true), OR(false, true)) = " << SHEFFER(NRIMP(true, true), OR(false, true)) << "\n";
+	std::cout << "\nSHEFFER( RIMP(true, true), OR(flase, true)) = " << SHEFFER(RIMP(true, true), OR(false, true)) << "\n";
 
-	std::cout << "\nRIMP( NOT( EQ( true, true ) ), AND( false, XOR ( true, false ))) = " << RIMP(NOT( XOR(true, true)), AND(false, XOR(true, false))) << "\n";
+	std::cout << "\nRNRIMP( NRIMP( EQ(true, true) ), AND( false, XOR (true, false))) = " << NRIMP(EQ(true, true), AND(false, XOR(true, false))) << "\n";
 }
 
